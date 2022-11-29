@@ -8,7 +8,6 @@ import java.lang.Exception
 fun main() {
     try {
         val bridgeGameController = BridgeGameController(
-            bridgeGame = BridgeGame(),
             inputView = InputView(),
             outputView = OutputView()
         )

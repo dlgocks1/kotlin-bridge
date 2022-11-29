@@ -18,10 +18,9 @@ class BridgeGameTest {
 
     @BeforeEach
     fun setUp() {
-        bridgeGame = BridgeGame()
-        bridgeGame.initGame(
+        bridgeGame = BridgeGame(
             size = 5,
-            maker = BridgeMaker(TestNumberGenerator(listOf(1, 0, 0, 1, 1)))
+            bridgeMaker = BridgeMaker(TestNumberGenerator(listOf(1, 0, 0, 1, 1)))
         )
     }
 
