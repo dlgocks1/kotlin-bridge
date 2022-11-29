@@ -4,33 +4,34 @@ import bridge.BridgeGame
 import bridge.BridgeMaker
 import bridge.BridgeRandomNumberGenerator
 import bridge.model.BridgeStatus
+import bridge.model.GameStatus
 import bridge.view.InputView
 import bridge.view.OutputView
 
 class BridgeGameController(
-    private val bridgeGame: BridgeGame,
     private val inputView: InputView,
     private val outputView: OutputView
 ) {
 
+    private val bridgeGame: BridgeGame
+    private var gameStatus: GameStatus = GameStatus.ONPLAY
+
     init {
         inputView.gameStart()
-        bridgeGame.initGame(
+        bridgeGame = BridgeGame(
             size = inputView.readBridgeSize(),
-            maker = BridgeMaker(BridgeRandomNumberGenerator())
+            bridgeMaker = BridgeMaker(BridgeRandomNumberGenerator())
         )
     }
 
     fun play() {
-        with(bridgeGame) {
-            do {
-                val result = bridgeGame.move(inputView.readMoving())
-                bridgeGame.updateMap(result)
-                onFinish(result)
-                onSuccess(result)
-                onFail(result)
-            } while (!isEnded())
-        }
+        do {
+            val result = bridgeGame.move(inputView.readMoving())
+            bridgeGame.updateMap(result)
+            onFinish(result)
+            onSuccess(result)
+            onFail(result)
+        } while (!gameStatus.onFinish())
     }
 
     private fun onFail(result: BridgeStatus) {
@@ -38,7 +39,7 @@ class BridgeGameController(
             result.isFail {
                 outputView.printMap(getBridgeMap())
                 if (retry(inputView.readGameCommand())) return@isFail
-                finish(result)
+                setFinish()
             }
         }
     }
@@ -55,8 +56,13 @@ class BridgeGameController(
                 outputView.printEndMessage()
                 outputView.printMap(getBridgeMap())
                 outputView.printResult(result, getTotalCount())
+                setFinish()
             }
         }
+    }
+
+    private fun setFinish() {
+        gameStatus = GameStatus.FINISH
     }
 
 }

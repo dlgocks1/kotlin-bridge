@@ -8,16 +8,14 @@ import bridge.utils.ERR_RETRY_SYMBOL
 /**
  * 다리 건너기 게임을 관리하는 클래스
  */
-class BridgeGame {
+class BridgeGame(size: Int, private val bridgeMaker: BridgeMaker) {
 
     private val bridgeResult = BridgeResult()
     private lateinit var bridgeStatus: BridgeStatus
-    private lateinit var bridgeMaker: BridgeMaker
-    private lateinit var bridge: Bridge
+    private var bridge: Bridge
     private var position: Int = 0
 
-    fun initGame(size: Int, maker: BridgeMaker) {
-        bridgeMaker = maker
+    init {
         bridge = generateRandomBridge(size)
     }
 
@@ -42,13 +40,6 @@ class BridgeGame {
         bridgeStatus = result
         bridgeResult.update(bridgeStatus)
     }
-
-    fun finish(result: BridgeStatus) {
-        bridgeStatus = BridgeStatus.FINISH(result.getDirection())
-    }
-
-    fun isEnded() = bridgeStatus is BridgeStatus.FINISH
-
 
     /**
      * 사용자가 칸을 이동할 때 사용하는 메서드
