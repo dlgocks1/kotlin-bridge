@@ -3,6 +3,7 @@ package bridge.controller
 import bridge.BridgeGame
 import bridge.BridgeMaker
 import bridge.BridgeRandomNumberGenerator
+import bridge.model.BridgeResult
 import bridge.model.BridgeStatus
 import bridge.model.GameStatus
 import bridge.view.InputView
@@ -15,6 +16,7 @@ class BridgeGameController(
 
     private val bridgeGame: BridgeGame
     private var gameStatus: GameStatus = GameStatus.ONPLAY
+    private val bridgeResult = BridgeResult()
 
     init {
         inputView.gameStart()
@@ -27,7 +29,7 @@ class BridgeGameController(
     fun play() {
         do {
             val result = bridgeGame.move(inputView.readMoving())
-            bridgeGame.updateMap(result)
+            bridgeResult.update(result)
             onFinish(result)
             onSuccess(result)
             onFail(result)
@@ -35,29 +37,28 @@ class BridgeGameController(
     }
 
     private fun onFail(result: BridgeStatus) {
-        with(bridgeGame) {
-            result.isFail {
-                outputView.printMap(getBridgeMap())
-                if (retry(inputView.readGameCommand())) return@isFail
-                setFinish()
+        result.isFail {
+            outputView.printMap(bridgeResult)
+            if (bridgeGame.retry(inputView.readGameCommand())) {
+                bridgeResult.restart()
+                return@isFail
             }
+            setFinish()
         }
     }
 
     private fun onSuccess(result: BridgeStatus) {
         result.isSuccess {
-            outputView.printMap(bridgeGame.getBridgeMap())
+            outputView.printMap(bridgeResult)
         }
     }
 
     private fun onFinish(result: BridgeStatus) {
-        with(bridgeGame) {
-            result.isFinish {
-                outputView.printEndMessage()
-                outputView.printMap(getBridgeMap())
-                outputView.printResult(result, getTotalCount())
-                setFinish()
-            }
+        result.isFinish {
+            outputView.printEndMessage()
+            outputView.printMap(bridgeResult)
+            outputView.printResult(result, bridgeResult.getTotalCount())
+            setFinish()
         }
     }
 

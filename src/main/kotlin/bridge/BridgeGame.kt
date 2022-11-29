@@ -2,7 +2,6 @@ package bridge
 
 import bridge.model.Bridge
 import bridge.model.BridgeStatus
-import bridge.model.BridgeResult
 import bridge.utils.ERR_RETRY_SYMBOL
 
 /**
@@ -10,8 +9,6 @@ import bridge.utils.ERR_RETRY_SYMBOL
  */
 class BridgeGame(size: Int, private val bridgeMaker: BridgeMaker) {
 
-    private val bridgeResult = BridgeResult()
-    private lateinit var bridgeStatus: BridgeStatus
     private var bridge: Bridge
     private var position: Int = 0
 
@@ -20,26 +17,6 @@ class BridgeGame(size: Int, private val bridgeMaker: BridgeMaker) {
     }
 
     private fun generateRandomBridge(size: Int) = Bridge(bridgeMaker.makeBridge(size))
-
-    fun getTotalCount(): Int = bridgeResult.getTotalCount()
-
-    /**
-     * 현재 건너고 있는 다리 포지션 및 다리 지도를 초기화한다.
-     */
-    private fun resetPosition() {
-        position = 0
-        bridgeResult.restart()
-    }
-
-    fun getBridgeMap() = bridgeResult.getBridgeMap()
-
-    /**
-     * 다리 지도를 업데이트한다.
-     */
-    fun updateMap(result: BridgeStatus) {
-        bridgeStatus = result
-        bridgeResult.update(bridgeStatus)
-    }
 
     /**
      * 사용자가 칸을 이동할 때 사용하는 메서드
@@ -60,7 +37,7 @@ class BridgeGame(size: Int, private val bridgeMaker: BridgeMaker) {
             ERR_RETRY_SYMBOL
         }
         if (userChoice == RETRY_SYMBOL) {
-            resetPosition()
+            position = 0
             return true
         }
         return false
