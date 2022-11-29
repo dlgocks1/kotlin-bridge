@@ -5,7 +5,6 @@ import bridge.BridgeMaker
 import bridge.BridgeRandomNumberGenerator
 import bridge.model.BridgeResult
 import bridge.model.BridgeStatus
-import bridge.model.GameStatus
 import bridge.view.InputView
 import bridge.view.OutputView
 
@@ -15,7 +14,6 @@ class BridgeGameController(
 ) {
 
     private val bridgeGame: BridgeGame
-    private var gameStatus: GameStatus = GameStatus.ONPLAY
     private val bridgeResult = BridgeResult()
 
     init {
@@ -33,7 +31,7 @@ class BridgeGameController(
             onFinish(result)
             onSuccess(result)
             onFail(result)
-        } while (!gameStatus.onFinish())
+        } while (result !is BridgeStatus.FINISH)
     }
 
     private fun onFail(result: BridgeStatus) {
@@ -43,7 +41,6 @@ class BridgeGameController(
                 bridgeResult.restart()
                 return@isFail
             }
-            setFinish()
         }
     }
 
@@ -58,13 +55,9 @@ class BridgeGameController(
             outputView.printEndMessage()
             outputView.printMap(bridgeResult)
             outputView.printResult(result, bridgeResult.getTotalCount())
-            setFinish()
         }
     }
 
-    private fun setFinish() {
-        gameStatus = GameStatus.FINISH
-    }
 
 }
 
