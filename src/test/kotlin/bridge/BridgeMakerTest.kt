@@ -1,9 +1,11 @@
 package bridge
 
+import bridge.mock.TestNumberGenerator
 import camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -14,7 +16,7 @@ class BridgeMakerTest {
 
     @BeforeEach
     fun setUp() {
-        bridgeMaker = BridgeMaker(BridgeRandomNumberGenerator())
+        bridgeMaker = BridgeMaker(TestNumberGenerator(listOf(1, 0, 0, 1, 1)))
     }
 
     @ParameterizedTest
@@ -36,5 +38,12 @@ class BridgeMakerTest {
         }
     }
 
+    @Test
+    @DisplayName("완성된 다리가 예상된 형태와 같은지 테스트한다.")
+    fun makeBridgeTest() {
+        assertSimpleTest {
+            assertThat(bridgeMaker.makeBridge(5)).isEqualTo(listOf("U", "D", "D", "U", "U"))
+        }
+    }
 
 }
