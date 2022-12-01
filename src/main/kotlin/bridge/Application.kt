@@ -1,5 +1,19 @@
 package bridge
 
+import bridge.controller.BridgeGameController
+import bridge.view.InputView
+import bridge.view.OutputView
+import java.lang.Exception
+
 fun main() {
-    // TODO: 프로그램 구현
+    try {
+        val bridgeGameController = BridgeGameController(
+            inputView = InputView(),
+            outputView = OutputView()
+        )
+        bridgeGameController.play()
+    } catch (error: Exception) {
+        println(error.message)
+    }
 }
+
