@@ -2,7 +2,7 @@ package bridge.model
 
 import bridge.utils.ERR_BRIDGE_SYMBOL
 
-class Bridge(private val bridge: List<String>) {
+class Bridge(private val bridge: List<String>) : List<String> by bridge {
 
     init {
         require(bridge.all {

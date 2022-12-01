@@ -54,7 +54,7 @@ class BridgeGameController(
         result.isFinish {
             outputView.printEndMessage()
             outputView.printMap(bridgeResult)
-            outputView.printResult(result, bridgeResult.getTotalCount())
+            outputView.printResult(result, bridgeResult.totalCount)
         }
     }
 

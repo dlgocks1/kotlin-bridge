@@ -1,5 +1,6 @@
 package bridge
 
+import bridge.mock.TestNumberGenerator
 import bridge.model.BridgeStatus
 import camp.nextstep.edu.missionutils.test.Assertions.assertRandomNumberInRangeTest
 import camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest
@@ -74,14 +75,6 @@ class BridgeGameTest {
         assertThrows<IllegalArgumentException> {
             assertThat(bridgeGame.retry("X"))
         }
-    }
-
-    class TestNumberGenerator(numbers: List<Int>) : BridgeNumberGenerator {
-        private val numbers: MutableList<Int> = numbers.toMutableList()
-        override fun generate(): Int {
-            return numbers.removeAt(0)
-        }
-
     }
 
 
